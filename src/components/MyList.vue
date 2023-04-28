@@ -2,35 +2,35 @@
  * @Description: 列表组件，用于首页、全部商品页面的商品列表
  * @Author: hai-27
  * @Date: 2020-02-07 16:23:00
- * @LastEditors: hai-27
- * @LastEditTime: 2020-04-05 13:22:22
+ * @LastEditors: huangdahan
+ * @LastEditTime: 2023-04-28 17:52:31
  -->
 <template>
   <div id="myList" class="myList">
     <ul>
-      <li v-for="item in list" :key="item.product_id">
+      <li v-for="item in list" :key="item.productId">
         <el-popover placement="top">
           <p>确定删除吗？</p>
           <div style="text-align: right; margin: 10px 0 0">
-            <el-button type="primary" size="mini" @click="deleteCollect(item.product_id)">确定</el-button>
+            <el-button type="primary" size="mini" @click="deleteCollect(item.productId)">确定</el-button>
           </div>
           <i class="el-icon-close delete" slot="reference" v-show="isDelete"></i>
         </el-popover>
-        <router-link :to="{ path: '/goods/details', query: {productID:item.product_id} }">
-          <img :src="$target +item.product_picture" alt />
-          <h2>{{item.product_name}}</h2>
-          <h3>{{item.product_title}}</h3>
+        <router-link :to="{ path: '/goods/details', query: {productId:item.productId} }">
+          <img :src="item.productPicture" alt />
+          <h2>{{item.productName}}</h2>
+          <h3>{{item.productTitle}}</h3>
           <p>
-            <span>{{item.product_selling_price}}元</span>
+            <span>{{item.productSellingPrice}}元</span>
             <span
-              v-show="item.product_price != item.product_selling_price"
+              v-show="item.productPrice != item.productSellingPrice"
               class="del"
-            >{{item.product_price}}元</span>
+            >{{item.productPrice}}元</span>
           </p>
         </router-link>
       </li>
       <li v-show="isMore && list.length>=1" id="more">
-        <router-link :to="{ path: '/goods', query: {categoryID:categoryID} }">
+        <router-link :to="{ path: '/goods', query: {categoryId:categoryId} }">
           浏览更多
           <i class="el-icon-d-arrow-right"></i>
         </router-link>
@@ -49,25 +49,25 @@ export default {
   },
   computed: {
     // 通过list获取当前显示的商品的分类ID，用于“浏览更多”链接的参数
-    categoryID: function() {
-      let categoryID = [];
+    categoryId: function() {
+      let categoryId = [];
       if (this.list != "") {
         for (let i = 0; i < this.list.length; i++) {
-          const id = this.list[i].category_id;
-          if (!categoryID.includes(id)) {
-            categoryID.push(id);
+          const id = this.list[i].categoryId;
+          if (!categoryId.includes(id)) {
+            categoryId.push(id);
           }
         }
       }
-      return categoryID;
+      return categoryId;
     }
   },
   methods: {
-    deleteCollect(product_id) {
+    deleteCollect(productId) {
       this.$axios
         .post("/api/user/collect/deleteCollect", {
-          user_id: this.$store.getters.getUser.user_id,
-          product_id: product_id
+          userId: this.$store.getters.getUser.userId,
+          productId: productId
         })
         .then(res => {
           switch (res.data.code) {
@@ -76,7 +76,7 @@ export default {
               // 删除删除列表中的该商品信息
               for (let i = 0; i < this.list.length; i++) {
                 const temp = this.list[i];
-                if (temp.product_id == product_id) {
+                if (temp.productId == productId) {
                   this.list.splice(i, 1);
                 }
               }

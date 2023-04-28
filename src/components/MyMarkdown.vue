@@ -2,8 +2,8 @@
  * @Description: 渲染markdown文件
  * @Author: hai-27
  * @Date: 2020-03-12 17:30:46
- * @LastEditors: hai-27
- * @LastEditTime: 2020-03-12 18:23:58
+ * @LastEditors: huangdahan
+ * @LastEditTime: 2023-04-28 16:20:57
  -->
 <template>
   <div id="my-markdown" class="markdown-body">
@@ -25,7 +25,7 @@ export default {
   created() {
     // 从后端请求README.md
     this.$axios
-      .get("/api/public/docs/README.md", {})
+      .get("/gateway/README.md", {})
       .then(res => {
         this.md = res.data;
       })

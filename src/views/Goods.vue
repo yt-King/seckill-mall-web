@@ -19,9 +19,9 @@
         <el-tabs v-model="activeName" type="card">
           <el-tab-pane
             v-for="item in categoryList"
-            :key="item.category_id"
-            :label="item.category_name"
-            :name="''+item.category_id"
+            :key="item.categoryId"
+            :label="item.categoryName"
+            :name="''+item.categoryId"
           />
         </el-tabs>
       </div>
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       categoryList: "", //分类列表
-      categoryID: [], // 分类id
+      categoryId: [], // 分类id
       product: "", // 商品列表
       productList: "",
       total: 0, // 商品总量
@@ -74,15 +74,15 @@ export default {
     this.currentPage = 1; //初始化当前页码为1
     // 如果路由没有传递参数，默认为显示全部商品
     if (Object.keys(this.$route.query).length == 0) {
-      this.categoryID = [];
+      this.categoryId = [];
       this.activeName = "0";
       return;
     }
-    // 如果路由传递了categoryID，则显示对应的分类商品
-    if (this.$route.query.categoryID != undefined) {
-      this.categoryID = this.$route.query.categoryID;
-      if (this.categoryID.length == 1) {
-        this.activeName = "" + this.categoryID[0];
+    // 如果路由传递了categoryId，则显示对应的分类商品
+    if (this.$route.query.categoryId != undefined) {
+      this.categoryId = this.$route.query.categoryId;
+      if (this.categoryId.length == 1) {
+        this.activeName = "" + this.categoryId[0];
       }
       return;
     }
@@ -95,10 +95,10 @@ export default {
     // 监听点击了哪个分类标签，通过修改分类id，响应相应的商品
     activeName: function(val) {
       if (val == 0) {
-        this.categoryID = [];
+        this.categoryId = [];
       }
       if (val > 0) {
-        this.categoryID = [Number(val)];
+        this.categoryId = [Number(val)];
       }
       // 初始化商品总量和当前页码
       this.total = 0;
@@ -106,7 +106,7 @@ export default {
       // 更新地址栏链接，方便刷新页面可以回到原来的页面
       this.$router.push({
         path: "/goods",
-        query: { categoryID: this.categoryID }
+        query: { categoryId: this.categoryId }
       });
     },
     // 监听搜索条件，响应相应的商品
@@ -116,7 +116,7 @@ export default {
       }
     },
     // 监听分类id，响应相应的商品
-    categoryID: function() {
+    categoryId: function() {
       this.getData();
       this.search = "";
     },
@@ -159,11 +159,11 @@ export default {
     // 向后端请求分类列表数据
     getCategory() {
       this.$axios
-        .post("/api/product/getCategory", {})
+        .post("/gateway/products/v1/category", {})
         .then(res => {
           const val = {
-            category_id: 0,
-            category_name: "全部"
+            categoryId: 0,
+            categoryName: "全部"
           };
           const cate = res.data.category;
           cate.unshift(val);
@@ -177,17 +177,17 @@ export default {
     getData() {
       // 如果分类列表为空则请求全部商品数据，否则请求分类商品数据
       const api =
-        this.categoryID.length == 0
-          ? "/api/product/getAllProduct"
+        this.categoryId.length == 0
+          ? "/gateway/products/v1/products"
           : "/api/product/getProductByCategory";
       this.$axios
         .post(api, {
-          categoryID: this.categoryID,
+          categoryId: this.categoryId,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         })
         .then(res => {
-          this.product = res.data.Product;
+          this.product = res.data.product;
           this.total = res.data.total;
         })
         .catch(err => {

@@ -54,7 +54,7 @@
           </div>
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/goods">全部商品</el-menu-item>
-          <el-menu-item index="/about">关于我们</el-menu-item>
+          <el-menu-item index="/about">关于我</el-menu-item>
 
           <div class="so">
             <el-input placeholder="请输入搜索内容" v-model="search">
@@ -151,8 +151,8 @@ export default {
             user_id: val.user_id
           })
           .then(res => {
-            if (res.data.code === "001") {
-              // 001 为成功, 更新vuex购物车状态
+            if (res.data.code == "0") {
+              // 0 为成功, 更新vuex购物车状态
               this.setShoppingCart(res.data.shoppingCartData);
             } else {
               // 提示失败信息

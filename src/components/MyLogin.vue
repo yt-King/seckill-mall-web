@@ -2,8 +2,8 @@
  * @Description: 登录组件
  * @Author: hai-27
  * @Date: 2020-02-19 20:55:17
- * @LastEditors: hai-27
- * @LastEditTime: 2020-03-01 15:34:08
+ * @LastEditors: huangdahan
+ * @LastEditTime: 2023-04-28 15:06:27
  -->
 <template>
     <div id="myLogin">
@@ -101,7 +101,7 @@ export default {
                             password: this.LoginUser.pass
                         })
                         .then(res => {
-                            // “001”代表登录成功，其他的均为失败
+                            // “0”代表登录成功，其他的均为失败
                             if (res.data.code === 0) {
                                 // 隐藏登录组件
                                 this.isLogin = false;
@@ -111,7 +111,7 @@ export default {
                                 // 登录信息存到vuex
                                 this.setUser(res.data.user);
                                 // 弹出通知框提示登录成功信息
-                                this.notifySucceed(res.data.msg);
+                                this.notifySucceed("登陆成功");
                             } else {
                                 // 清空输入框的校验状态
                                 this.$refs["ruleForm"].resetFields();

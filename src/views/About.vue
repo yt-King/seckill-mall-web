@@ -3,7 +3,7 @@
     <div class="about-header">
       <div class="about-title">
         <i class="el-icon-tickets" style="color: #ff6700;"></i>
-        关于我们
+        关于我以及这个项目的介绍
       </div>
     </div>
     <div class="about-content">

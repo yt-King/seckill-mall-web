@@ -1,12 +1,10 @@
 <template>
   <div class="home" id="home" name="home">
-    <!-- 轮播图 -->
+   <!-- 轮播图 -->
     <div class="block">
-      <el-carousel height="460px" trigger="click" type="card">
+      <el-carousel height="460px">
         <el-carousel-item v-for="item in carousel" :key="item.carousel_id">
-          <router-link :to="{ path: '/active/' + item.carousel_id }">
-            <img style="height:460px;" :src="$target + item.imgPath" :alt="item.describes" />
-          </router-link>
+          <img style="height:460px;" :src="item.imgPath" :alt="item.describes" />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -21,7 +19,7 @@
           <div class="box-bd">
             <div class="promo-list">
               <router-link to = "/about">
-                <img :src="$target +'public/imgs/phone/phone.png'" />
+                <img :src="this.phoneImg" />
               </router-link>
             </div>
             <div class="list">
@@ -46,10 +44,10 @@
             <div class="promo-list">
               <ul>
                 <li>
-                  <img :src="$target +'public/imgs/appliance/appliance-promo1.png'" />
+                  <img :src="this.promo1Img" />
                 </li>
                 <li>
-                  <img :src="$target +'public/imgs/appliance/appliance-promo2.png'" />
+                  <img :src="this.promo2Img" />
                 </li>
               </ul>
             </div>
@@ -76,10 +74,10 @@
             <div class="promo-list">
               <ul>
                 <li>
-                  <img :src="$target +'public/imgs/accessory/accessory-promo1.png'" alt />
+                  <img :src="this.promo3Img" alt />
                 </li>
                 <li>
-                  <img :src="$target +'public/imgs/accessory/accessory-promo2.png'" alt />
+                  <img :src="this.promo4Img" alt />
                 </li>
               </ul>
             </div>
@@ -107,7 +105,12 @@ export default {
       protectingShellList: "", // 保护套商品列表
       chargerList: "", //充电器商品列表
       applianceActive: 1, // 家电当前选中的商品分类
-      accessoryActive: 1 // 配件当前选中的商品分类
+      accessoryActive: 1, // 配件当前选中的商品分类
+      phoneImg: "https://typora-imagehost-1308499275.cos.ap-shanghai.myqcloud.com/2022-12/phone.png",
+      promo1Img: "https://typora-imagehost-1308499275.cos.ap-shanghai.myqcloud.com/2022-12/appliance-promo1.png",
+      promo2Img: "https://typora-imagehost-1308499275.cos.ap-shanghai.myqcloud.com/2022-12/appliance-promo2.png",
+      promo3Img: "https://typora-imagehost-1308499275.cos.ap-shanghai.myqcloud.com/2022-12/accessory-promo1.png",
+      promo4Img: "https://typora-imagehost-1308499275.cos.ap-shanghai.myqcloud.com/2022-12/accessory-promo2.png"
     };
   },
   watch: {
@@ -155,7 +158,7 @@ export default {
   created() {
     // 获取轮播图数据
     this.$axios
-      .post("/api/resources/carousel", {})
+      .post("/gateway/products/v1/carousel", {})
       .then(res => {
         this.carousel = res.data.carousel;
       })

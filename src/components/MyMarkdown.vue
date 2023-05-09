@@ -1,10 +1,3 @@
-<!--
- * @Description: 渲染markdown文件
- * @Author: hai-27
- * @Date: 2020-03-12 17:30:46
- * @LastEditors: huangdahan
- * @LastEditTime: 2023-04-28 16:20:57
- -->
 <template>
   <div id="my-markdown" class="markdown-body">
     <vue-markdown :source="md"></vue-markdown>

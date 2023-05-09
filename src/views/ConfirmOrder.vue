@@ -43,7 +43,7 @@
         <div class="goods-list">
           <ul>
             <li v-for="item in getCheckGoods" :key="item.id">
-              <img :src="$target + item.productImg" />
+              <img :src="item.productPicture" />
               <span class="pro-name">{{item.productName}}</span>
               <span class="pro-price">{{item.price}}元 x {{item.num}}</span>
               <span class="pro-status"></span>
@@ -158,19 +158,19 @@ export default {
     ...mapActions(["deleteShoppingCart"]),
     addOrder() {
       this.$axios
-        .post("/api/user/order/addOrder", {
-          user_id: this.$store.getters.getUser.user_id,
-          products: this.getCheckGoods
+        .post("/gateway/order/v1/add", {
+          userId: this.$store.getters.getUser.userId,
+          orders: this.getCheckGoods
         })
         .then(res => {
           let products = this.getCheckGoods;
           switch (res.data.code) {
-            // “001”代表结算成功
-            case "001":
+            // 0代表结算成功
+            case 0:
               for (let i = 0; i < products.length; i++) {
                 const temp = products[i];
                 // 删除已经结算的购物车商品
-                this.deleteShoppingCart(temp.id);
+                this.deleteShoppingCart(temp.productId);
               }
               // 提示结算结果
               this.notifySucceed(res.data.msg);

@@ -17,33 +17,35 @@
         <ul>
           <!-- 我的订单表头 -->
           <li class="order-info">
-            <div class="order-id">订单编号: {{item[0].order_id}}</div>
-            <div class="order-time">订单时间: {{item[0].order_time | dateFormat}}</div>
+            <div class="order-id">订单编号: {{item.id}}</div>
+            <div class="order-time">订单时间: {{item.createTime | dateFormat}}</div>
           </li>
           <li class="header">
             <div class="pro-img"></div>
             <div class="pro-name">商品名称</div>
             <div class="pro-price">单价</div>
             <div class="pro-num">数量</div>
+            <div class="pro-status">订单状态</div>
             <div class="pro-total">小计</div>
           </li>
           <!-- 我的订单表头END -->
 
           <!-- 订单列表 -->
-          <li class="product-list" v-for="(product,i) in item" :key="i">
+          <li class="product-list" v-for="(product,i) in item.childOrders" :key="i">
             <div class="pro-img">
-              <router-link :to="{ path: '/goods/details', query: {productID:product.product_id} }">
-                <img :src="$target + product.product_picture" />
+              <router-link :to="{ path: '/goods/details', query: {productId:product.productId,categoryId:0} }">
+                <img :src="product.productPicture" />
               </router-link>
             </div>
             <div class="pro-name">
               <router-link
-                :to="{ path: '/goods/details', query: {productID:product.product_id} }"
-              >{{product.product_name}}</router-link>
+                :to="{ path: '/goods/details', query: {productId:product.productId,categoryId:0} }"
+              >{{product.productName}}</router-link>
             </div>
-            <div class="pro-price">{{product.product_price}}元</div>
-            <div class="pro-num">{{product.product_num}}</div>
-            <div class="pro-total pro-total-in">{{product.product_price*product.product_num}}元</div>
+            <div class="pro-price">{{product.price}}元</div>
+            <div class="pro-num">{{product.num}}</div>
+            <div class="pro-status">{{product.status==="SUCCESS"?"付款成功":"库存不足付款失败"}}</div>
+            <div class="pro-total pro-total-in">{{product.price*product.num}}元</div>
           </li>
         </ul>
         <div class="order-bar">
@@ -87,12 +89,13 @@ export default {
   activated() {
     // 获取订单数据
     this.$axios
-      .post("/api/user/order/getOrder", {
-        user_id: this.$store.getters.getUser.user_id
+      .post("/gateway/order/v1/get", {
+        userId: this.$store.getters.getUser.userId
       })
       .then(res => {
-        if (res.data.code === "001") {
+        if (res.data.code === 0) {
           this.orders = res.data.orders;
+          console.log(this.orders)
         } else {
           this.notifyError(res.data.msg);
         }
@@ -106,14 +109,14 @@ export default {
     orders: function(val) {
       let total = [];
       for (let i = 0; i < val.length; i++) {
-        const element = val[i];
+        const element = val[i].childOrders;
 
         let totalNum = 0;
         let totalPrice = 0;
         for (let j = 0; j < element.length; j++) {
           const temp = element[j];
-          totalNum += temp.product_num;
-          totalPrice += temp.product_price * temp.product_num;
+          totalNum += temp.num;
+          totalPrice += temp.price * temp.num;
         }
         total.push({ totalNum, totalPrice });
       }
@@ -190,7 +193,7 @@ export default {
 .order .content ul .pro-img {
   float: left;
   height: 85px;
-  width: 120px;
+  width: 80px;
   padding-left: 80px;
 }
 .order .content ul .pro-img img {
@@ -199,7 +202,7 @@ export default {
 }
 .order .content ul .pro-name {
   float: left;
-  width: 380px;
+  width: 300px;
 }
 .order .content ul .pro-name a {
   color: #424242;
@@ -209,14 +212,19 @@ export default {
 }
 .order .content ul .pro-price {
   float: left;
-  width: 160px;
+  width: 200px;
   padding-right: 18px;
   text-align: center;
 }
 .order .content ul .pro-num {
   float: left;
-  width: 190px;
+  width: 140px;
   text-align: center;
+}
+.order .content ul .pro-status {
+    float: left;
+    width: 140px;
+    text-align: center;
 }
 .order .content ul .pro-total {
   float: left;

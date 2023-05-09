@@ -166,19 +166,19 @@ export default {
         return Promise.reject(err);
       });
     // 获取各类商品数据
-    this.getPromo("手机", "phoneList");
-    this.getPromo("电视机", "miTvList");
-    this.getPromo("保护套", "protectingShellList");
-    this.getPromo("充电器", "chargerList");
+    this.getPromo([1], 7,"phoneList");
+    this.getPromo([2], 7,"miTvList");
+    this.getPromo([5], 7,"protectingShellList");
+    this.getPromo([7], 7,"chargerList");
     this.getPromo(
-      ["电视机", "空调", "洗衣机"],
-      "applianceList",
-      "/api/product/getHotProduct"
+      [2, 3, 4],
+      7,
+      "applianceList"
     );
     this.getPromo(
-      ["保护套", "保护膜", "充电器", "充电宝"],
-      "accessoryList",
-      "/api/product/getHotProduct"
+      [5, 6, 7, 8],
+      7,
+      "accessoryList"
     );
   },
   methods: {
@@ -191,14 +191,13 @@ export default {
       this.accessoryActive = val;
     },
     // 获取各类商品数据方法封装
-    getPromo(categoryName, val, api) {
-      api = api != undefined ? api : "/api/product/getPromoProduct";
+    getPromo(categoryId, pageSize, val) {
       this.$axios
-        .post(api, {
-          categoryName
+        .post("/gateway/products/v1/products", {
+          categoryId, pageSize
         })
         .then(res => {
-          this[val] = res.data.Product;
+          this[val] = res.data.product;
         })
         .catch(err => {
           return Promise.reject(err);

@@ -1,10 +1,3 @@
-<!--
- * @Description: 登录组件
- * @Author: hai-27
- * @Date: 2020-02-19 20:55:17
- * @LastEditors: huangdahan
- * @LastEditTime: 2023-04-28 15:06:27
- -->
 <template>
     <div id="myLogin">
         <el-dialog title="登录" width="300px" center :visible.sync="isLogin">

@@ -176,10 +176,7 @@ export default {
     // 向后端请求全部商品或分类商品数据
     getData() {
       // 如果分类列表为空则请求全部商品数据，否则请求分类商品数据
-      const api =
-        this.categoryId.length == 0
-          ? "/gateway/products/v1/products"
-          : "/api/product/getProductByCategory";
+      const api = "/gateway/products/v1/products";
       this.$axios
         .post(api, {
           categoryId: this.categoryId,
@@ -197,13 +194,13 @@ export default {
     // 通过搜索条件向后端请求商品数据
     getProductBySearch() {
       this.$axios
-        .post("/api/product/getProductBySearch", {
+        .post("/gateway/products/v1/products", {
           search: this.search,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         })
         .then(res => {
-          this.product = res.data.Product;
+          this.product = res.data.product;
           this.total = res.data.total;
         })
         .catch(err => {

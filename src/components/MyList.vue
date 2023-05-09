@@ -12,18 +12,18 @@
         <el-popover placement="top">
           <p>确定删除吗？</p>
           <div style="text-align: right; margin: 10px 0 0">
-            <el-button type="primary" size="mini" @click="deleteCollect(item.productId)">确定</el-button>
+            <el-button type="primary" size="mini" @click="deleteCollect(item.id)">确定</el-button>
           </div>
           <i class="el-icon-close delete" slot="reference" v-show="isDelete"></i>
         </el-popover>
-        <router-link :to="{ path: '/goods/details', query: {productId:item.productId} }">
+        <router-link :to="{ path: '/goods/details', query: {productId:item.id,categoryId:item.categoryId} }">
           <img :src="item.productPicture" alt />
           <h2>{{item.productName}}</h2>
           <h3>{{item.productTitle}}</h3>
           <p>
             <span>{{item.productSellingPrice}}元</span>
             <span
-              v-show="item.productPrice != item.productSellingPrice"
+              v-show="item.productPrice !== item.productSellingPrice"
               class="del"
             >{{item.productPrice}}元</span>
           </p>
@@ -51,7 +51,7 @@ export default {
     // 通过list获取当前显示的商品的分类ID，用于“浏览更多”链接的参数
     categoryId: function() {
       let categoryId = [];
-      if (this.list != "") {
+      if (this.list !== "") {
         for (let i = 0; i < this.list.length; i++) {
           const id = this.list[i].categoryId;
           if (!categoryId.includes(id)) {
@@ -65,23 +65,23 @@ export default {
   methods: {
     deleteCollect(productId) {
       this.$axios
-        .post("/api/user/collect/deleteCollect", {
+        .post("/gateway/person/v1/deleteCollection", {
           userId: this.$store.getters.getUser.userId,
           productId: productId
         })
         .then(res => {
           switch (res.data.code) {
-            case "001":
+            case 0:
               // 删除成功
               // 删除删除列表中的该商品信息
               for (let i = 0; i < this.list.length; i++) {
                 const temp = this.list[i];
-                if (temp.productId == productId) {
+                if (temp.id === productId) {
                   this.list.splice(i, 1);
                 }
               }
               // 提示删除成功信息
-              this.notifySucceed(res.data.msg);
+              this.notifySucceed("删除成功");
               break;
             default:
               // 提示删除失败信息

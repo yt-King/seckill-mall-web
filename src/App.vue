@@ -49,7 +49,7 @@
         >
           <div class="logo">
             <router-link to="/">
-              <img src="./assets/imgs/logo.png" alt />
+              <img src="./assets/imgs/logo.png" alt width="220"/>
             </router-link>
           </div>
           <el-menu-item index="/">首页</el-menu-item>
@@ -148,7 +148,7 @@ export default {
         // 用户已经登录,获取该用户的购物车信息
         this.$axios
           .post("/gateway/person/v1/getShoppingCart", {
-            user_id: val.user_id
+            userId: val.userId
           })
           .then(res => {
             if (res.data.code == "0") {
